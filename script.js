@@ -1,17 +1,41 @@
-// Calendar data
-const calendar = document.getElementById('calendar');
+// Function to render calendar view for the month with appointments
+function renderCalendarWithAppointments(year, month, appointments) {
+  const calendar = document.getElementById('calendar');
+  calendar.innerHTML = ''; // Clear previous calendar
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // Render calendar days
+  for (let i = 1; i <= daysInMonth; i++) {
+    const dayElement = document.createElement('div');
+    dayElement.classList.add('day');
+    dayElement.textContent = i;
+
+    // Check if appointments exist for this day
+    const appointmentsForDay = appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      return appointmentDate.getFullYear() === year &&
+             appointmentDate.getMonth() === month &&
+             appointmentDate.getDate() === i;
+    });
+
+    // If appointments exist, render them
+    appointmentsForDay.forEach(appointment => {
+      const appointmentElement = document.createElement('div');
+      appointmentElement.classList.add('appointment');
+      appointmentElement.textContent = `${appointment.time}: ${appointment.description}`;
+      dayElement.appendChild(appointmentElement);
+    });
+
+    calendar.appendChild(dayElement);
+  }
+}
+
+// Initial rendering of the calendar
 const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
 const currentMonth = currentDate.getMonth();
-const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-// Render calendar
-for (let i = 1; i <= daysInMonth; i++) {
-  const dayElement = document.createElement('div');
-  dayElement.classList.add('day');
-  dayElement.textContent = i;
-  calendar.appendChild(dayElement);
-}
+renderCalendarWithAppointments(currentYear, currentMonth, []);
 
 // Appointment form submission
 const appointmentForm = document.getElementById('appointmentForm');
@@ -21,15 +45,13 @@ appointmentForm.addEventListener('submit', function(event) {
   const appointmentTime = document.getElementById('appointmentTime').value;
   const appointmentDescription = document.getElementById('appointmentDescription').value;
 
-  // Create appointment element
-  const appointmentElement = document.createElement('div');
-  appointmentElement.classList.add('appointment');
-  appointmentElement.textContent = `${appointmentTime}: ${appointmentDescription}`;
+  // Update appointments array with the new appointment
+  const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+  appointments.push({ date: appointmentDate, time: appointmentTime, description: appointmentDescription });
+  localStorage.setItem('appointments', JSON.stringify(appointments));
 
-  // Find the corresponding day element in the calendar and append appointment
-  const dayIndex = new Date(appointmentDate).getDate() - 1;
-  const dayElement = calendar.children[dayIndex];
-  dayElement.appendChild(appointmentElement);
+  // Re-render calendar with appointments
+  renderCalendarWithAppointments(currentYear, currentMonth, appointments);
 
   // Reset form
   appointmentForm.reset();
