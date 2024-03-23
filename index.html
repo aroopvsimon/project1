@@ -3,29 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My CRM Solution</title>
+  <title>CRM Solution</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-  <h1>My CRM Solution</h1>
-  
-  <!-- Appointment Form -->
-  <form id="appointmentForm">
-    <label for="appointmentDate">Date:</label>
-    <input type="date" id="appointmentDate" required>
-    <br>
-    <label for="appointmentTime">Time:</label>
-    <input type="time" id="appointmentTime" required>
-    <br>
-    <label for="appointmentDescription">Description:</label>
-    <textarea id="appointmentDescription" required></textarea>
-    <br>
-    <button type="submit">Schedule Appointment</button>
-  </form>
+  <div class="container">
+    <div class="header">
+      <h1>CRM Solution</h1>
+    </div>
+    
+    <!-- Appointment Form -->
+    <div class="form-container">
+      <form id="appointmentForm">
+        <label for="appointmentDate">Date:</label>
+        <input type="date" id="appointmentDate" required>
+        <br>
+        <label for="appointmentTime">Time:</label>
+        <input type="time" id="appointmentTime" required>
+        <br>
+        <label for="appointmentDescription">Description:</label>
+        <textarea id="appointmentDescription" required></textarea>
+        <br>
+        <button type="submit">Schedule Appointment</button>
+      </form>
+    </div>
 
-  <!-- Calendar -->
-  <div class="calendar" id="calendar">
-    <!-- Calendar days will be populated dynamically -->
+    <!-- Calendar -->
+    <div class="calendar" id="calendar">
+      <!-- Calendar days will be populated dynamically -->
+    </div>
   </div>
 
   <script src="script.js"></script>
