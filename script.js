@@ -29,4 +29,8 @@ appointmentForm.addEventListener('submit', function(event) {
   // Find the corresponding day element in the calendar and append appointment
   const dayIndex = new Date(appointmentDate).getDate() - 1;
   const dayElement = calendar.children[dayIndex];
-  dayElement.appendChild(appoint
+  dayElement.appendChild(appointmentElement);
+
+  // Reset form
+  appointmentForm.reset();
+});
