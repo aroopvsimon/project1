@@ -3,9 +3,22 @@ function renderCalendarWithAppointments(year, month, appointments) {
   const calendar = document.getElementById('calendar');
   calendar.innerHTML = ''; // Clear previous calendar
 
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Month and year header
+  const header = document.createElement('div');
+  header.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+  header.classList.add('month-header');
+  calendar.appendChild(header);
 
   // Render calendar days
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    const emptyDayElement = document.createElement('div');
+    emptyDayElement.classList.add('empty-day');
+    calendar.appendChild(emptyDayElement);
+  }
+
   for (let i = 1; i <= daysInMonth; i++) {
     const dayElement = document.createElement('div');
     dayElement.classList.add('day');
