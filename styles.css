@@ -1,0 +1,16 @@
+/* CSS styles for calendar */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+.day {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.appointment {
+  background-color: #007bff;
+  color: #fff;
+  padding: 5px;
+  margin-bottom: 2px;
+}
