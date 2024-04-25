@@ -1,39 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Questionnaire</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionnaire</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>Questionnaire</h1>
-
-<div id="questions">
-  <!-- Questions will be inserted here -->
-</div>
-
-<div id="submitDiv" style="display:none;">
-  <button onclick="submitAnswers()">Submit</button>
-</div>
-
-<div id="exportDiv" style="display:none;">
-  <button onclick="exportToCSV()">Export to CSV</button>
-</div>
-
-<table id="answers" style="display:none;">
-  <thead>
-    <tr>
-      <th>Question</th>
-      <th>Answer</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- User answers will be inserted here -->
-  </tbody>
-</table>
-
-<script src="script.js"></script>
+  <div id="questions"></div>
+  <div id="submitDiv" style="display: none;">
+    <button onclick="submitAnswers()">Submit</button>
+  </div>
+  <div id="exportDiv" style="display: none;">
+    <button onclick="exportToCSV()">Export to CSV</button>
+  </div>
+  <table id="answers" style="display: none;">
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Answer</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script src="script.js"></script>
 </body>
 </html>

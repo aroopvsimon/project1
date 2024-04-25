@@ -1,56 +1,38 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background-color: #f5f5f5;
-}
-
-h1 {
-  text-align: center;
-  color: #2d64a5; /* VMware blue */
+  margin: 20px;
+  background-color: #f5f5f5; /* Light gray background */
 }
 
 #questions {
   margin-bottom: 20px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-label, input[type="text"] {
-  display: inline-block; /* Display labels and input fields inline */
-  vertical-align: top; /* Align them vertically */
 }
 
 label {
-  width: 60%; /* Set width for labels */
+  display: block;
+  margin-bottom: 5px;
+  color: #333; /* Dark gray text */
 }
 
 input[type="text"] {
-  width: 30%; /* Set width for input fields */
-  padding: 10px;
+  width: 25%;
+  padding: 8px;
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px;
   box-sizing: border-box;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-}
-
-.button-container {
-  text-align: right;
 }
 
 button {
   padding: 10px 20px;
-  background-color: #2d64a5; /* VMware blue */
-  color: #ffffff;
+  background-color: #007cba; /* VMware blue */
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #1d4e7e; /* Darker shade of VMware blue */
+  background-color: #005f7e; /* Darker shade of VMware blue on hover */
 }
 
 table {
@@ -60,12 +42,12 @@ table {
 }
 
 th, td {
-  border: 1px solid #dddddd;
-  text-align: left;
+  border: 1px solid #ddd; /* Light gray border for table cells */
   padding: 8px;
+  text-align: left;
 }
 
 th {
-  background-color: #2d64a5; /* VMware blue */
-  color: #ffffff;
+  background-color: #007cba; /* VMware blue for table header */
+  color: white;
 }
