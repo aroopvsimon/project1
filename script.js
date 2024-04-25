@@ -1,101 +1,125 @@
-// Function to render calendar view for the selected month with appointments
-function renderCalendarWithAppointments(year, month, appointments) {
-  console.log("Rendering calendar with appointments:", year, month, appointments);
-  const calendar = document.getElementById('calendar');
-  calendar.innerHTML = ''; // Clear previous calendar
+const questions = [
+  "INDIA OFFICE SITES COUNT",
+  "PRIMARY DC LOCATION",
+  "DR LOCATION",
+  "RPO REQUIREMENTS",
+  "SITE TO SITE CONNECTIVITY?",
+  "LOVA/RVTOOLS REPORTS AVAILABLE?",
+  "LICENSE CONSOLIDATION NEEDED?",
+  "REFRESH TIMELINES",
+  "AWS/AZURE/OTHER",
+  "SERVICES",
+  "APPS UTILIZING EC2/Azure",
+  "CLOUD SPEND OPTIMIZATION & SECURITY",
+  "BUSINESS CRITICAL APPS",
+  "NUMBER OF APPLICATIONS IN-HOUSE DEVELOPED?",
+  "ANY APP COMMERCIAL (COTS)",
+  "SAAS APPS / WEB APPS",
+  "SELF SERVICE APP ACCESS",
+  "5Rs INITIATIVE IN PLACE?",
+  "DEVELOP CUSTOMER SOLUTIONS?",
+  "HIGH PERFORMANCE REAL TIME APPS?",
+  "TRANSACTION INTEGRITY DESIRED ACROSS DISTRIBUTED NODES?",
+  "COMPONENTS IN MULTIPLE LANGUAGES? CROSS LANGUAGE MESSAGING REQUIRED?",
+  "MYSQL/POSTGRES IN USE? DO YOU HAVE AUTOMATED LCM, BACKUPS, HA & MONITORING?",
+  "ANALYTICAL MODELS FOR COMPLEX APPS",
+  "DO YOU NEED DEVELOPER SELF SERVICE ACCESS TO PLATFORM",
+  "DO YOU NEED CURATED OPEN SOURCE IMAGES?",
+  "IS AUTOMATION OF CONTAINER CREATION, MANAGEMENT ACROSS CLOUDS REQUIRED",
+  "DISTRIBUTED MICROSERVICES ACROSS SITES/CLOUDS?",
+  "OVERLAY VIRTUAL NETWORKS IN USE?",
+  "SDWAN IN USE?",
+  "IDS/IPS in USE?",
+  "LOAD BALANCER?",
+  "WAF REQUIRED?",
+  "AV FOR ENDPOINT IN USE?",
+  "EDR FOR ENDPOINT IN USE?",
+  "AV & EDR FOR VMs IN USE?",
+  "NGFW VENDOR",
+  "ZTNA INITIATIVE",
+  "SASE INITIATIVE",
+  "KUBERNETES CLUSTER SECURITY / MICROSERVICES SECURITY",
+  "CLOUD WEB SECURITY (CASB)",
+  "NETWORK DETECTION & RESPONSE (NDR)"
+];
 
-  // Month and year header
-  const header = document.createElement('div');
-  header.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
-  header.classList.add('month-header');
-  calendar.appendChild(header);
-
-  // Render calendar days
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    const emptyDayElement = document.createElement('div');
-    emptyDayElement.classList.add('empty-day');
-    calendar.appendChild(emptyDayElement);
-  }
-
-  for (let i = 1; i <= daysInMonth; i++) {
-    const dayElement = document.createElement('div');
-    dayElement.classList.add('day');
-    dayElement.textContent = i;
-
-    // Check if appointments exist for this day
-    const appointmentsForDay = appointments.filter(appointment => {
-      const appointmentDate = new Date(appointment.date);
-      return appointmentDate.getFullYear() === year &&
-             appointmentDate.getMonth() === month &&
-             appointmentDate.getDate() === i;
-    });
-
-    // If appointments exist, render them
-    appointmentsForDay.forEach(appointment => {
-      const appointmentElement = document.createElement('div');
-      appointmentElement.classList.add('appointment');
-      appointmentElement.textContent = `${appointment.time}: ${appointment.description}`;
-      dayElement.appendChild(appointmentElement);
-    });
-
-    calendar.appendChild(dayElement);
-  }
-}
-
-// Function to populate the month dropdown
-function populateMonthDropdown() {
-  const selectMonth = document.getElementById('selectMonth');
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  months.forEach((month, index) => {
-    const option = document.createElement('option');
-    option.value = index;
-    option.textContent = month;
-    selectMonth.appendChild(option);
+document.addEventListener('DOMContentLoaded', function() {
+  const questionsDiv = document.getElementById('questions');
+  questions.forEach((question, index) => {
+    const label = document.createElement('label');
+    label.textContent = `${index + 1}. ${question}`;
+    const input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.addEventListener('input', checkAllAnswers);
+    questionsDiv.appendChild(label);
+    questionsDiv.appendChild(input);
+    questionsDiv.appendChild(document.createElement('br'));
   });
+  
+  showSubmit(); // Call this function to check if all questions are answered and show the submit button
+});
+
+function checkAllAnswers() {
+  const inputs = document.querySelectorAll('#questions input');
+  const submitDiv = document.getElementById('submitDiv');
+  let allAnswered = true;
+
+  inputs.forEach(input => {
+    if (input.value.trim() === '') {
+      allAnswered = false;
+    }
+  });
+
+  if (allAnswered) {
+    submitDiv.style.display = 'block';
+  } else {
+    submitDiv.style.display = 'none';
+  }
 }
 
-// Initialize calendar with the current month and appointments
-const currentDate = new Date();
-const currentYear = currentDate.getFullYear();
-const currentMonth = currentDate.getMonth();
-let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-console.log("Initial appointments:", appointments);
-renderCalendarWithAppointments(currentYear, currentMonth, appointments);
+function submitAnswers() {
+  const inputs = document.querySelectorAll('#questions input');
+  const tableBody = document.querySelector('#answers tbody');
 
-// Populate month dropdown
-populateMonthDropdown();
+  inputs.forEach((input, index) => {
+    const question = questions[index];
+    const answer = input.value.trim();
 
-// Appointment form submission
-const appointmentForm = document.getElementById('appointmentForm');
-appointmentForm.addEventListener('submit', function(event) {
-  event.preventDefault();
+    if (answer !== '') {
+      const newRow = tableBody.insertRow();
+      const questionCell = newRow.insertCell();
+      const answerCell = newRow.insertCell();
 
-  // Get appointment details
-  const appointmentDate = document.getElementById('appointmentDate').value;
-  const appointmentTime = document.getElementById('appointmentTime').value;
-  const appointmentDescription = document.getElementById('appointmentDescription').value;
+      questionCell.textContent = question;
+      answerCell.textContent = answer;
+    }
+  });
 
-  // Update appointments array with the new appointment
-  appointments.push({ date: appointmentDate, time: appointmentTime, description: appointmentDescription });
-  localStorage.setItem('appointments', JSON.stringify(appointments));
-  console.log("Updated appointments:", appointments);
+  document.getElementById('submitDiv').style.display = 'none';
+  document.getElementById('exportDiv').style.display = 'block';
+  document.getElementById('answers').style.display = 'table';
+}
 
-  // Refresh appointments array from local storage
-  appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-  console.log("Refreshed appointments from local storage:", appointments);
+function exportToCSV() {
+  const table = document.getElementById('answers');
+  const rows = table.querySelectorAll('tbody tr');
+  let csv = 'Question,Answer\n';
 
-  // Display selected month in calendar with appointments
-  const selectMonth = document.getElementById('selectMonth');
-  const selectedMonth = parseInt(selectMonth.value);
-  renderCalendarWithAppointments(currentYear, selectedMonth, appointments);
+  rows.forEach(row => {
+    const question = row.cells[0].textContent;
+    const answer = row.cells[1].textContent;
+    csv += `"${question}","${answer}"\n`;
+  });
 
-  // Reset form
-  appointmentForm.reset();
-});
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', 'questionnaire.csv');
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+function showSubmit() {
+  document.getElementById('submitDiv').style.display = 'block';
+}
