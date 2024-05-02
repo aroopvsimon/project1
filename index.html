@@ -9,14 +9,15 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      background-color: #f8f8f8;
+      color: #333;
     }
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
+      min-height: 100vh;
     }
     .category-tile {
       width: 200px;
@@ -28,10 +29,20 @@
       margin: 10px;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .category-tile:hover {
+      background-color: #005f91;
+    }
+    h1 {
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
+  <h1>Choose a Category</h1>
   <div class="container" id="categoryTiles">
     <!-- Tiles will be dynamically generated here -->
   </div>
