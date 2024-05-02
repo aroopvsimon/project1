@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landscape Assessment Questionnaire</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 style="font-weight: bold; font-size: 48px; color: #007db8;">Landscape Assessment Questionnaire</h1>
+  <div id="questions"></div>
+  <div id="submitDiv" style="display: none;">
+    <button onclick="submitAnswers()">Submit</button>
+  </div>
+  <div id="exportDiv" style="display: none;">
+    <button onclick="exportToCSV()">Export to CSV</button>
+  </div>
+  <table id="answers" style="display: none;">
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Answer</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // Function to parse URL parameters
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Questions categorized by different sections
+    const questionsByCategory = {
+      "IT": [
+        "ORGANIZATION NAME",
+        "CURRENT DC LOCATIONS",
+        "CURRENT DR LOCATION",
+        // Add more IT questions here
+      ],
+      "NT": [
+        "CURRENT SITE TO SITE CONNECTIVITY?",
+        "LIST CURRENT IDS/IPS TECHNOLOGY IN-USE?",
+        // Add more NT questions here
+      ],
+      "ST": [
+        "RANSOMWARE PROTECTION REQUIRED",
+        "ANY ZTNA INITIATIVES/REQUIREMENTS?",
+        // Add more ST questions here
+      ],
+      "AT": [
+        "IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
+        "DO YOU HAVE HIGH PERFORMANCE REAL TIME APPLICATIONS?",
+        // Add more AT questions here
+      ],
+      "PT": [
+        "ARE THERE ANY APPLICATIONS IN AWS/AZURE/OCI/GOOGLE OTHER HYPERSCALERS?",
+        // Add more PT questions here
+      ],
+      "CIO": [
+        "DO YOU REQUIRE CLOUD SPEND OPTIMIZATION & SECURITY",
+        // Add more CIO questions here
+      ]
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const questionsDiv = document.getElementById('questions');
+      const category = getUrlParameter('category');
+      const categoryQuestions = questionsByCategory[category];
+
+      if (categoryQuestions) {
+        categoryQuestions.forEach((question, index) => {
+          const label = document.createElement('label');
+          label.textContent = `${index + 1}. ${question}`;
+          const input = document.createElement('input');
+          input.setAttribute('type', 'text');
+          input.addEventListener('input', checkAllAnswers);
+          questionsDiv.appendChild(label);
+          questionsDiv.appendChild(input);
+          questionsDiv.appendChild(document.createElement('br'));
+        });
+        
+        showSubmit(); // Call this function to check if all questions are answered and show the submit button
+      } else {
+        // If category is not found, display an error message
+        questionsDiv.textContent = 'Category not found.';
+      }
+    });
+
+    function checkAllAnswers() {
+      const inputs = document.querySelectorAll('#questions input');
+      const submitDiv = document.getElementById('submitDiv');
+      let allAnswered = true;
+
+      inputs.forEach(input => {
+        if (input.value.trim() === '') {
+          allAnswered = false;
+        }
+      });
+
+      if (allAnswered) {
+        submitDiv.style.display = 'block';
+      } else {
+        submitDiv.style.display = 'none';
+      }
+    }
+
+    function submitAnswers() {
+      const inputs = document.querySelectorAll('#questions input');
+      const tableBody = document.querySelector('#answers tbody');
+
+      inputs.forEach((input, index) => {
+        const question = questionsByCategory[getUrlParameter('category')][index];
+        const answer = input.value.trim();
+
+        if (answer !== '') {
+          const newRow = tableBody.insertRow();
+          const questionCell = newRow.insertCell();
+          const answerCell = newRow.insertCell();
+
+          questionCell.textContent = question;
+          answerCell.textContent = answer;
+        }
+      });
+
+      document.getElementById('submitDiv').style.display = 'none';
+      document.getElementById('exportDiv').style.display = 'block';
+      document.getElementById('answers').style.display = 'table';
+    }
+
+    function exportToCSV() {
+      const table = document.getElementById('answers');
+      const rows = table.querySelectorAll('tbody tr');
+      let csv = 'Question,Answer\n';
+
+      rows.forEach(row => {
+        const question = row.cells[0].textContent;
+        const answer = row.cells[1].textContent;
+        csv += `"${question}","${answer}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', 'questionnaire.csv');
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    function showSubmit() {
+      document.getElementById('submitDiv').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

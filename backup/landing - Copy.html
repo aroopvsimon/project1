@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landscape Assessment Questionnaire</title>
+  <style>
+    /* Add CSS styles for the tiles */
+    .tile {
+      width: 500px;
+      height: 200px;
+      background-color: #f0f0f0;
+      margin: 20px;
+      display: inline-block;
+      text-align: center;
+      line-height: 200px;
+      font-size: 20px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="font-weight: bold; font-size: 48px; color: #007db8;">Landscape Assessment Questionnaire</h1>  
+  <!-- Tiles for different categories -->
+  <div class="tile" onclick="redirectToIndex('IT')">IT(INFRA TEAM)</div>
+  <div class="tile" onclick="redirectToIndex('NT')">NT(NETWORK TEAM)</div>
+  <div class="tile" onclick="redirectToIndex('ST')">ST(SECURITY TEAM)</div>
+  <div class="tile" onclick="redirectToIndex('AT')">AT(APPLICATION TEAM)</div>
+  <div class="tile" onclick="redirectToIndex('PT')">PT(PUBLIC CLOUD TEAM)</div>
+
+  <!-- JavaScript to redirect based on clicked tile -->
+  <script>
+    function redirectToIndex(category) {
+      // Redirect to index.html with category as query parameter
+      window.location.href = `index.html?category=${category}`;
+    }
+  </script>
+</body>
+</html>

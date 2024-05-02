@@ -1,4 +1,4 @@
-const itQuestions = [
+const questions = [
   "IT: ORGANIZATION NAME",
   "IT: CURRENT DC LOCATIONS",
   "IT: CURRENT DR LOCATION",
@@ -11,6 +11,8 @@ const itQuestions = [
   "IT: LIST RECURRING MANUAL PROCESSES OR PROBLEM STATEMENTS FACED BY VMWARE ADMIN TODAY - SUCH AS OFF-HOURS MONITORING/RECURRING DATASTORE EXTENSION, MANUAL PAPER WORK etc",
   "IT: LIST THE MONITORING TOOLS USED TODAY FOR EACH SERVER UTILIZATION, STORAGE UTILIZATION, NETWORK MONITORING, APPLICATION MONITORING, DATABASE MONITORING, SAP ETC",
   "IT: RPO REQUIREMENTS",
+  "ST: RANSOMWARE PROTECTION REQUIRED",
+  "NT: CURRENT SITE TO SITE CONNECTIVITY?",
   "IT: LOVA/RVTOOLS REPORTS AVAILABLE?",
   "IT: SERVER/STORAGE HARDWARE REFRESH REQUIRED IN NEXT 12 MONTHS?",
   "IT: VMWARE LICENSE CONSOLIDATION NEEDED?",
@@ -23,10 +25,29 @@ const itQuestions = [
   "IT: APPLICATION ARCHITECTURE DIAGRAMS AVAILABLE?",
   "IT: ANY APPLICATIONS USING TOMCAT / IIS?",
   "IT: ANY APPLICATIONS/DEVELOPER TEAM USING SPRING JAVA FRAMEWORK?",
+  "AT: IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
   "IT: LIST DATABASES BEING MANAGED? SUCH AS MYSQL/ORACLE/MSSQL/POSTGRES",
   "IT: DO YOU WISH TO PROVIDE SELF SERVICE ACCESS TO YOUR END USERS?",
   "IT: DO YOU DEVELOP CUSTOMER SOLUTIONS?",
-  "IT: SIMPLE AUTOMATION TASK (SAT) SAT1 : ASSIGN AN IP ADDRESS FROM AN IP ADDRESS MANAGEMENT TOOL",
+  "AT: DO YOU HAVE HIGH PERFORMANCE REAL TIME APPLICATIONS?",
+  "AT: IS TRANSACTION INTEGRITY DESIRED FOR YOUR DISTRIBUTED APPLICATIONS?",
+  "AT: ARE IN HOUSE APPLICATION COMPONENTS DEVELOPED IN MULTIPLE LANGUAGES? IS CROSS LANGUAGE MESSAGING REQUIRED?",
+  "AT: DO YOU HAVE AUTOMATED DATABASE LCM, BACKUPS, HA & MONITORING?",
+  "AT: DO YOU REQUIRE/DEVELOP ANALYTICAL MODELS FOR COMPLEX APPLICATIONS",
+  "AT: DO YOU NEED DEVELOPER SELF SERVICE ACCESS TO PLATFORM",
+  "AT: DO YOU NEED CURATED OPEN SOURCE IMAGES?",
+  "AT: DO YOU DEPLOY KUBERNETES CLUSTERS ACROSS SITES/CLOUDS?",
+  "AT: IS AUTOMATION OF KUBERNETES DEPLOYMENT & CONSUMPTION REQUIRED?",
+  "NT: DO YOU WANT TO REDUCE NETWORK/IP ADDRESS PROVISIONING TIME?",
+  "NT: LIST CURRENT IDS/IPS TECHNOLOGY IN-USE?",
+  "NT: LIST ANY LOAD BALANCERS IN USE",
+  "NT: LIST CURRENT PERIMETER FIREWALL(S)",
+  "ST: ANY ZTNA INITIATIVES/REQUIREMENTS?",
+  "ST: ANY SASE INITIATIVES",
+  "ST: KUBERNETES CLUSTER SECURITY / MICROSERVICES SECURITY",
+  "NT: ANY NETWORK DETECTION & RESPONSE (NDR) REQUIREMENTS",
+  "NT: ANY NETOWRK TRAFFIC ANALYSIS REQUIREMENTS",
+  "IT: SAT1 : SIMPLE AUTOMATION TASK (SAT1) : ASSIGN AN IP ADDRESS FROM AN IP ADDRESS MANAGEMENT TOOL",
   "IT: SAT2 : INTEGRATE ERP WITH ITSM AND ACTIVE DIRECTORY",
   "IT: SAT3 : UPDATE A CONFIGURATION MANAGEMENT DATABASE",
   "IT: SAT4 : INITIATE A SYSTEM BACKUP",
@@ -38,7 +59,7 @@ const itQuestions = [
   "IT: SAT10 : VM TEMPLATES TO BE DEFINED ONCE AND DEPLOYED AGNOSTIC TO ANY CLOUD (AWS/AZURE/ONPREMISE)",
   "IT: SAT11 : DISK EXTENSION AUTOMATION",
   "IT: SAT12 : SELF-SERVICE MULTI-CLOUD",
-  "IT: SIMPLE MONITORING TASK (SMT)1 : APACHE HADOOP MONITORING",
+  "IT: SMT1 : SIMPLE MONITORING TASK (SMT1) : APACHE HADOOP MONITORING",
   "IT: SMT2 : APACHE TOMCAT MONITORING",
   "IT: SMT3 : ARISTA EOS MONITORING",
   "IT: SMT4 : CISCO NETWORKING DEVICES MONITORING",
@@ -63,17 +84,7 @@ const itQuestions = [
   "IT: SMT23 : STORAGE DEVICES MONITORING",
   "IT: SMT24 : VSPHERE REPLICATION MONITORING",
   "IT: SMT25 : OS AND APPLICATION MONITORING MONITORING",
-];
-
-const ntQuestions = [
-  "NT: CURRENT SITE TO SITE CONNECTIVITY?",
-  "NT: DO YOU WANT TO REDUCE NETWORK/IP ADDRESS PROVISIONING TIME?",
-  "NT: LIST CURRENT IDS/IPS TECHNOLOGY IN-USE?",
-  "NT: LIST ANY LOAD BALANCERS IN USE",
-  "NT: LIST CURRENT PERIMETER FIREWALL(S)",
-  "NT: ANY NETWORK DETECTION & RESPONSE (NDR) REQUIREMENTS",
-  "NT: ANY NETOWRK TRAFFIC ANALYSIS REQUIREMENTS",
-  "NT1 : NETWORK TASK (NT)1 : MONITOR/ANALYZE NETWORK PROBLEMS USING END-TO-END NETWORK BEHAVIOR",
+  "NT1 : (NETWORK TASK 1) : MONITOR/ANALYZE NETWORK PROBLEMS USING END-TO-END NETWORK BEHAVIOR",
   "NT2 : PERFORM ROOT-CAUSE ANALYSIS",
   "NT3 : PERFORM HEALTH ANALYSIS OF PHYSICAL AND VIRTUAL NETWORK DEVICES",
   "NT4 : BE CONTINUOUSLY AWARE OF THE TOP TALKING APPLICATIONS/VMS AND THEIR NETWORKING CONSTRUCTS",
@@ -115,34 +126,6 @@ const ntQuestions = [
   "NT40 : LOG CHECKING MONITORING",
   "NT41 : UNDERSTANDING % N/S, E/W, AVERAGE, PEAK DATACENTER TRAFFIC",
   "NT42 : RISK ANALYSIS/ NEW TECHNOLOGY ADOPTION",
-  // Add more NT questions as needed
-];
-
-const atQuestions = [
-  "AT: IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
-  "AT: DO YOU HAVE HIGH PERFORMANCE REAL TIME APPLICATIONS?",
-  "AT: IS TRANSACTION INTEGRITY DESIRED FOR YOUR DISTRIBUTED APPLICATIONS?",
-  "AT: ARE IN HOUSE APPLICATION COMPONENTS DEVELOPED IN MULTIPLE LANGUAGES? IS CROSS LANGUAGE MESSAGING REQUIRED?",
-  "AT: DO YOU HAVE AUTOMATED DATABASE LCM, BACKUPS, HA & MONITORING?",
-  "AT: DO YOU REQUIRE/DEVELOP ANALYTICAL MODELS FOR COMPLEX APPLICATIONS",
-  "AT: DO YOU NEED DEVELOPER SELF SERVICE ACCESS TO PLATFORM",
-  "AT: DO YOU NEED CURATED OPEN SOURCE IMAGES?",
-  "AT: DO YOU DEPLOY KUBERNETES CLUSTERS ACROSS SITES/CLOUDS?",
-  "AT: IS AUTOMATION OF KUBERNETES DEPLOYMENT & CONSUMPTION REQUIRED?",
-
-  // Add AT questions as needed
-];
-
-const stQuestions = [
-  "ST: RANSOMWARE PROTECTION REQUIRED",
-  "ST: ANY ZTNA INITIATIVES/REQUIREMENTS?",
-  "ST: ANY SASE INITIATIVES",
-  "ST: KUBERNETES CLUSTER SECURITY / MICROSERVICES SECURITY",
-  
-// Add ST questions as needed
-];
-
-const cioQuestions = [
   "CIO: DO YOU REQUIRE CLOUD SPEND OPTIMIZATION & SECURITY",
   "CIO: DO YOU WANT TO AUTOMATE MANUAL OPERATIONAL TASKS WITH AUTOMATION",
   "CIO: DO YOU WANT TO INCREASE SHAREHOLDER VALUE",
@@ -155,79 +138,81 @@ const cioQuestions = [
   "CIO: DO YOU WANT TO VIRTUALIZE QUICKLY",
   "CIO: DO YOU WANT TO LEVERAGE EFFICIENCIES",
   "CIO: DO YOU WANT TO AVOID VENDOR LOCK-IN ACROSS CLOUDS",
- 
- // Add CIO questions as needed
 ];
 
-let categoryQuestions = []; // Declare categoryQuestions globally
-
-document.addEventListener('DOMContentLoaded', function() {
-  const questionsDiv = document.getElementById('questions');
-  const params = new URLSearchParams(window.location.search);
-  const category = params.get('category');
   
-  console.log('Category:', category); // Log the extracted category
+  document.addEventListener('DOMContentLoaded', function() {
+    const questionsDiv = document.getElementById('questions');
+    const params = new URLSearchParams(window.location.search);
+    let category = params.get('category');
+    
+    console.log('Category:', category); // Log the extracted category
 
-  categoryQuestions = questions.filter(question => question.startsWith(category.toUpperCase()));
-
-  console.log('Category Questions:', categoryQuestions); // Log the filtered questions
-
-  categoryQuestions.forEach((question, index) => {
-    const label = document.createElement('label');
-    label.textContent = `${index + 1}. ${question}`;
-    const input = document.createElement('input');
-    input.setAttribute('type', 'text');
-    input.addEventListener('input', checkAllAnswers);
-    questionsDiv.appendChild(label);
-    questionsDiv.appendChild(input);
-    questionsDiv.appendChild(document.createElement('br'));
-  });
-  
-  showSubmit(); // Call this function to check if all questions are answered and show the submit button
-});
-
-function checkAllAnswers() {
-  const inputs = document.querySelectorAll('#questions input');
-  const submitDiv = document.getElementById('submitDiv');
-  let allAnswered = true;
-
-  inputs.forEach(input => {
-    if (input.value.trim() === '') {
-      allAnswered = false;
+    // Check if category is null or undefined, and provide a default value
+    if (!category) {
+      category = 'IT'; // Default category
     }
+
+    const categoryQuestions = questions.filter(question => question.startsWith(category.toUpperCase()));
+
+    console.log('Category Questions:', categoryQuestions); // Log the filtered questions
+  
+    categoryQuestions.forEach((question, index) => {
+      const label = document.createElement('label');
+      label.textContent = `${index + 1}. ${question}`;
+      const input = document.createElement('input');
+      input.setAttribute('type', 'text');
+      input.addEventListener('input', checkAllAnswers);
+      questionsDiv.appendChild(label);
+      questionsDiv.appendChild(input);
+      questionsDiv.appendChild(document.createElement('br'));
+    });
+    
+    showSubmit(); // Call this function to check if all questions are answered and show the submit button
   });
 
-  if (allAnswered) {
-    submitDiv.style.display = 'block';
-  } else {
-    submitDiv.style.display = 'none';
+  function checkAllAnswers() {
+    const inputs = document.querySelectorAll('#questions input');
+    const submitDiv = document.getElementById('submitDiv');
+    let allAnswered = true;
+
+    inputs.forEach(input => {
+      if (input.value.trim() === '') {
+        allAnswered = false;
+      }
+    });
+
+    if (allAnswered) {
+      submitDiv.style.display = 'block';
+    } else {
+      submitDiv.style.display = 'none';
+    }
   }
-}
 
-function submitAnswers() {
-  const inputs = document.querySelectorAll('#questions input');
-  const tableBody = document.querySelector('#answers tbody');
+  function submitAnswers() {
+    const inputs = document.querySelectorAll('#questions input');
+    const tableBody = document.querySelector('#answers tbody');
 
-  inputs.forEach((input, index) => {
-    const question = categoryQuestions[index]; // Use categoryQuestions instead of questions
-    const answer = input.value.trim();
+    inputs.forEach((input, index) => {
+      const question = questions[index];
+      const answer = input.value.trim();
 
-    if (answer !== '') {
-      const newRow = tableBody.insertRow();
-      const questionCell = newRow.insertCell();
-      const answerCell = newRow.insertCell();
+      if (answer !== '') {
+        const newRow = tableBody.insertRow();
+        const questionCell = newRow.insertCell();
+        const answerCell = newRow.insertCell();
 
-      questionCell.textContent = question;
-      answerCell.textContent = answer;
-    }
-  });
+        questionCell.textContent = question;
+        answerCell.textContent = answer;
+      }
+    });
 
-  document.getElementById('submitDiv').style.display = 'none';
-  document.getElementById('exportDiv').style.display = 'block';
-  document.getElementById('answers').style.display = 'table';
-}
+    document.getElementById('submitDiv').style.display = 'none';
+    document.getElementById('exportDiv').style.display = 'block';
+    document.getElementById('answers').style.display = 'table';
+  }
 
-function exportToCSV() {
+ function exportToCSV() {
   const table = document.getElementById('answers');
   const rows = table.querySelectorAll('tbody tr');
   let csv = 'Question,Answer\n';
@@ -247,11 +232,7 @@ function exportToCSV() {
   window.URL.revokeObjectURL(url);
 }
 
-function showSubmit() {
-  document.getElementById('submitDiv').style.display = 'block';
-}
 
-function changeExportButtonLabel(category) {
-  const exportButton = document.getElementById('exportButton');
-  exportButton.textContent = `Export to CSV (${category})`;
-}
+  function showSubmit() {
+    document.getElementById('submitDiv').style.display = 'block';
+  }

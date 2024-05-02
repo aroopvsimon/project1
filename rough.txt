@@ -1,5 +1,51 @@
-const itQuestions = [
-  "IT: ORGANIZATION NAME",
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landscape Assessment Questionnaire</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Add custom CSS for softer fonts */
+    #questions label {
+      font-family: Arial, sans-serif; /* Change font family */
+      font-size: 16px; /* Change font size */
+      color: #444; /* Change font color */
+    }
+  </style>
+</head>
+<body>
+  <h1 style="font-weight: bold; font-size: 48px; color: #007db8;">Landscape Assessment Questionnaire</h1>
+  <div id="questions"></div>
+  <div id="submitDiv" style="display: none;">
+    <button onclick="submitAnswers()">Submit</button>
+  </div>
+  <div id="exportDiv" style="display: none;">
+    <button id="exportButton" onclick="exportToCSV()">Export to CSV</button>
+  </div>
+  <table id="answers" style="display: none;">
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Answer</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get('category');
+      generateQuestions(category);
+    });
+
+    function generateQuestions(category) {
+      let categoryQuestions;
+
+      switch (category) {
+        case 'IT':
+          categoryQuestions = [
+ "IT: ORGANIZATION NAME",
   "IT: CURRENT DC LOCATIONS",
   "IT: CURRENT DR LOCATION",
   "IT: TOTAL ESXi SERVER COUNT VIRTUALIZED TODAY",
@@ -63,10 +109,13 @@ const itQuestions = [
   "IT: SMT23 : STORAGE DEVICES MONITORING",
   "IT: SMT24 : VSPHERE REPLICATION MONITORING",
   "IT: SMT25 : OS AND APPLICATION MONITORING MONITORING",
-];
-
-const ntQuestions = [
-  "NT: CURRENT SITE TO SITE CONNECTIVITY?",
+           
+// List of IT questions
+          ];
+          break;
+        case 'NT':
+          categoryQuestions = [
+ "NT: CURRENT SITE TO SITE CONNECTIVITY?",
   "NT: DO YOU WANT TO REDUCE NETWORK/IP ADDRESS PROVISIONING TIME?",
   "NT: LIST CURRENT IDS/IPS TECHNOLOGY IN-USE?",
   "NT: LIST ANY LOAD BALANCERS IN USE",
@@ -115,11 +164,13 @@ const ntQuestions = [
   "NT40 : LOG CHECKING MONITORING",
   "NT41 : UNDERSTANDING % N/S, E/W, AVERAGE, PEAK DATACENTER TRAFFIC",
   "NT42 : RISK ANALYSIS/ NEW TECHNOLOGY ADOPTION",
-  // Add more NT questions as needed
-];
-
-const atQuestions = [
-  "AT: IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
+            
+// List of NT questions
+          ];
+          break;
+        case 'AT':
+          categoryQuestions = [
+"AT: IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
   "AT: DO YOU HAVE HIGH PERFORMANCE REAL TIME APPLICATIONS?",
   "AT: IS TRANSACTION INTEGRITY DESIRED FOR YOUR DISTRIBUTED APPLICATIONS?",
   "AT: ARE IN HOUSE APPLICATION COMPONENTS DEVELOPED IN MULTIPLE LANGUAGES? IS CROSS LANGUAGE MESSAGING REQUIRED?",
@@ -129,21 +180,23 @@ const atQuestions = [
   "AT: DO YOU NEED CURATED OPEN SOURCE IMAGES?",
   "AT: DO YOU DEPLOY KUBERNETES CLUSTERS ACROSS SITES/CLOUDS?",
   "AT: IS AUTOMATION OF KUBERNETES DEPLOYMENT & CONSUMPTION REQUIRED?",
-
-  // Add AT questions as needed
-];
-
-const stQuestions = [
-  "ST: RANSOMWARE PROTECTION REQUIRED",
+            
+// List of AT questions
+          ];
+          break;
+        case 'ST':
+          categoryQuestions = [
+ "ST: RANSOMWARE PROTECTION REQUIRED",
   "ST: ANY ZTNA INITIATIVES/REQUIREMENTS?",
   "ST: ANY SASE INITIATIVES",
   "ST: KUBERNETES CLUSTER SECURITY / MICROSERVICES SECURITY",
-  
-// Add ST questions as needed
-];
-
-const cioQuestions = [
-  "CIO: DO YOU REQUIRE CLOUD SPEND OPTIMIZATION & SECURITY",
+          
+  // List of ST questions
+          ];
+          break;
+        case 'CIO':
+          categoryQuestions = [
+"CIO: DO YOU REQUIRE CLOUD SPEND OPTIMIZATION & SECURITY",
   "CIO: DO YOU WANT TO AUTOMATE MANUAL OPERATIONAL TASKS WITH AUTOMATION",
   "CIO: DO YOU WANT TO INCREASE SHAREHOLDER VALUE",
   "CIO: DO YOU WANT TO IMPROVE ACCESS TO INFORMATION",
@@ -155,103 +208,100 @@ const cioQuestions = [
   "CIO: DO YOU WANT TO VIRTUALIZE QUICKLY",
   "CIO: DO YOU WANT TO LEVERAGE EFFICIENCIES",
   "CIO: DO YOU WANT TO AVOID VENDOR LOCK-IN ACROSS CLOUDS",
- 
- // Add CIO questions as needed
-];
+             
+// List of CIO questions
+          ];
+          break;
+        default:
+          categoryQuestions = [];
+          break;
+      }
 
-let categoryQuestions = []; // Declare categoryQuestions globally
+      const questionsDiv = document.getElementById('questions');
 
-document.addEventListener('DOMContentLoaded', function() {
-  const questionsDiv = document.getElementById('questions');
-  const params = new URLSearchParams(window.location.search);
-  const category = params.get('category');
-  
-  console.log('Category:', category); // Log the extracted category
-
-  categoryQuestions = questions.filter(question => question.startsWith(category.toUpperCase()));
-
-  console.log('Category Questions:', categoryQuestions); // Log the filtered questions
-
-  categoryQuestions.forEach((question, index) => {
-    const label = document.createElement('label');
-    label.textContent = `${index + 1}. ${question}`;
-    const input = document.createElement('input');
-    input.setAttribute('type', 'text');
-    input.addEventListener('input', checkAllAnswers);
-    questionsDiv.appendChild(label);
-    questionsDiv.appendChild(input);
-    questionsDiv.appendChild(document.createElement('br'));
-  });
-  
-  showSubmit(); // Call this function to check if all questions are answered and show the submit button
-});
-
-function checkAllAnswers() {
-  const inputs = document.querySelectorAll('#questions input');
-  const submitDiv = document.getElementById('submitDiv');
-  let allAnswered = true;
-
-  inputs.forEach(input => {
-    if (input.value.trim() === '') {
-      allAnswered = false;
+      categoryQuestions.forEach((question, index) => {
+        const label = document.createElement('label');
+        label.textContent = `${index + 1}. ${question}`;
+        const input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.addEventListener('input', checkAllAnswers);
+        questionsDiv.appendChild(label);
+        questionsDiv.appendChild(input);
+        questionsDiv.appendChild(document.createElement('br'));
+      });
+      
+      showSubmit(); // Call this function to check if all questions are answered and show the submit button
     }
-  });
 
-  if (allAnswered) {
-    submitDiv.style.display = 'block';
-  } else {
-    submitDiv.style.display = 'none';
-  }
-}
+    function checkAllAnswers() {
+      const inputs = document.querySelectorAll('#questions input');
+      const submitDiv = document.getElementById('submitDiv');
+      let allAnswered = true;
 
-function submitAnswers() {
-  const inputs = document.querySelectorAll('#questions input');
-  const tableBody = document.querySelector('#answers tbody');
+      inputs.forEach(input => {
+        if (input.value.trim() === '') {
+          allAnswered = false;
+        }
+      });
 
-  inputs.forEach((input, index) => {
-    const question = categoryQuestions[index]; // Use categoryQuestions instead of questions
-    const answer = input.value.trim();
-
-    if (answer !== '') {
-      const newRow = tableBody.insertRow();
-      const questionCell = newRow.insertCell();
-      const answerCell = newRow.insertCell();
-
-      questionCell.textContent = question;
-      answerCell.textContent = answer;
+      if (allAnswered) {
+        submitDiv.style.display = 'block';
+      } else {
+        submitDiv.style.display = 'none';
+      }
     }
-  });
 
-  document.getElementById('submitDiv').style.display = 'none';
-  document.getElementById('exportDiv').style.display = 'block';
-  document.getElementById('answers').style.display = 'table';
-}
+    function submitAnswers() {
+      const inputs = document.querySelectorAll('#questions input');
+      const tableBody = document.querySelector('#answers tbody');
 
-function exportToCSV() {
-  const table = document.getElementById('answers');
-  const rows = table.querySelectorAll('tbody tr');
-  let csv = 'Question,Answer\n';
+      inputs.forEach((input, index) => {
+        const question = categoryQuestions[index]; // Use categoryQuestions instead of questions
+        const answer = input.value.trim();
 
-  rows.forEach(row => {
-    const question = row.cells[0].textContent;
-    const answer = row.cells[1].textContent;
-    csv += `"${question}","${answer}"\n`;
-  });
+        if (answer !== '') {
+          const newRow = tableBody.insertRow();
+          const questionCell = newRow.insertCell();
+          const answerCell = newRow.insertCell();
 
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.setAttribute('href', url);
-  a.setAttribute('download', 'questionnaire.csv');
-  a.click();
-  window.URL.revokeObjectURL(url);
-}
+          questionCell.textContent = question;
+          answerCell.textContent = answer;
+        }
+      });
 
-function showSubmit() {
-  document.getElementById('submitDiv').style.display = 'block';
-}
+      document.getElementById('submitDiv').style.display = 'none';
+      document.getElementById('exportDiv').style.display = 'block';
+      document.getElementById('answers').style.display = 'table';
+    }
 
-function changeExportButtonLabel(category) {
-  const exportButton = document.getElementById('exportButton');
-  exportButton.textContent = `Export to CSV (${category})`;
-}
+    function exportToCSV() {
+      const table = document.getElementById('answers');
+      const rows = table.querySelectorAll('tbody tr');
+      let csv = 'Question,Answer\n';
+
+      rows.forEach(row => {
+        const question = row.cells[0].textContent;
+        const answer = row.cells[1].textContent;
+        csv += `"${question}","${answer}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', 'questionnaire.csv');
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    function showSubmit() {
+      document.getElementById('submitDiv').style.display = 'block';
+    }
+
+    function changeExportButtonLabel(category) {
+      const exportButton = document.getElementById('exportButton');
+      exportButton.textContent = `Export to CSV (${category})`;
+    }
+  </script>
+</body>
+</html>
