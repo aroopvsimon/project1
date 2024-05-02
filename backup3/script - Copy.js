@@ -1,39 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landscape Assessment Questionnaire</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Add custom CSS for softer fonts */
-    #questions label {
-      font-family: Arial, sans-serif; /* Change font family */
-      font-size: 16px; /* Change font size */
-      color: #444; /* Change font color */
-    }
-  </style>
-</head>
-<body>
-  <h1 style="font-weight: bold; font-size: 48px; color: #007db8;">Landscape Assessment Questionnaire</h1>
-  <div id="questions"></div>
-  <div id="submitDiv" style="display: none;">
-    <button onclick="submitAnswers()">Submit</button>
-  </div>
-<div id="exportDiv" style="display: none;">
-  <button id="exportButton" onclick="exportToCSV()">Export to CSV</button>
-</div>
-  <table id="answers" style="display: none;">
-    <thead>
-      <tr>
-        <th>Question</th>
-        <th>Answer</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <script>
-    const itQuestions = [
+const itQuestions = [
   "IT: ORGANIZATION NAME",
   "IT: CURRENT DC LOCATIONS",
   "IT: CURRENT DR LOCATION",
@@ -194,87 +159,84 @@ const cioQuestions = [
  // Add CIO questions as needed
 ];
 
+let categoryQuestions = []; // Declare categoryQuestions globally
 
-    let categoryQuestions = [];
-    document.addEventListener('DOMContentLoaded', function() {
-      const questionsDiv = document.getElementById('questions');
-      const params = new URLSearchParams(window.location.search);
-      const category = params.get('category');
-      
-      console.log('Category:', category); // Log the extracted category
+document.addEventListener('DOMContentLoaded', function() {
+  const questionsDiv = document.getElementById('questions');
+  const params = new URLSearchParams(window.location.search);
+  const category = params.get('category');
+  
+  console.log('Category:', category); // Log the extracted category
 
-      const categoryQuestions = questions.filter(question => question.startsWith(category.toUpperCase()));
+  categoryQuestions = questions.filter(question => question.startsWith(category.toUpperCase()));
 
-      console.log('Category Questions:', categoryQuestions); // Log the filtered questions
-   
-      categoryQuestions.forEach((question, index) => {
-        const label = document.createElement('label');
-        label.textContent = `${index + 1}. ${question}`;
-        label.style.fontFamily = 'Arial, sans-serif'; // Apply custom font family
-        label.style.fontSize = '16px'; // Apply custom font size
-        label.style.color = '#444'; // Apply custom font color
-        const input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        input.addEventListener('input', checkAllAnswers);
-        questionsDiv.appendChild(label);
-        questionsDiv.appendChild(input);
-        questionsDiv.appendChild(document.createElement('br'));
-      });
-      
-      showSubmit(); // Call this function to check if all questions are answered and show the submit button
-    });
+  console.log('Category Questions:', categoryQuestions); // Log the filtered questions
 
-    function checkAllAnswers() {
-      const inputs = document.querySelectorAll('#questions input');
-      const submitDiv = document.getElementById('submitDiv');
-      let allAnswered = true;
+  categoryQuestions.forEach((question, index) => {
+    const label = document.createElement('label');
+    label.textContent = `${index + 1}. ${question}`;
+    const input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.addEventListener('input', checkAllAnswers);
+    questionsDiv.appendChild(label);
+    questionsDiv.appendChild(input);
+    questionsDiv.appendChild(document.createElement('br'));
+  });
+  
+  showSubmit(); // Call this function to check if all questions are answered and show the submit button
+});
 
-      inputs.forEach(input => {
-        if (input.value.trim() === '') {
-          allAnswered = false;
-        }
-      });
+function checkAllAnswers() {
+  const inputs = document.querySelectorAll('#questions input');
+  const submitDiv = document.getElementById('submitDiv');
+  let allAnswered = true;
 
-      if (allAnswered) {
-        submitDiv.style.display = 'block';
-      } else {
-        submitDiv.style.display = 'none';
-      }
+  inputs.forEach(input => {
+    if (input.value.trim() === '') {
+      allAnswered = false;
     }
+  });
 
-    function submitAnswers() {
-      const inputs = document.querySelectorAll('#questions input');
-      const tableBody = document.querySelector('#answers tbody');
+  if (allAnswered) {
+    submitDiv.style.display = 'block';
+  } else {
+    submitDiv.style.display = 'none';
+  }
+}
 
-      inputs.forEach((input, index) => {
-        const question = questions[index];
-        const answer = input.value.trim();
+function submitAnswers() {
+  const inputs = document.querySelectorAll('#questions input');
+  const tableBody = document.querySelector('#answers tbody');
 
-        if (answer !== '') {
-          const newRow = tableBody.insertRow();
-          const questionCell = newRow.insertCell();
-          const answerCell = newRow.insertCell();
+  inputs.forEach((input, index) => {
+    const question = categoryQuestions[index]; // Use categoryQuestions instead of questions
+    const answer = input.value.trim();
 
-          questionCell.textContent = question;
-          answerCell.textContent = answer;
-        }
-      });
+    if (answer !== '') {
+      const newRow = tableBody.insertRow();
+      const questionCell = newRow.insertCell();
+      const answerCell = newRow.insertCell();
 
-      document.getElementById('submitDiv').style.display = 'none';
-      document.getElementById('exportDiv').style.display = 'block';
-      document.getElementById('answers').style.display = 'table';
+      questionCell.textContent = question;
+      answerCell.textContent = answer;
     }
+  });
 
-  function exportToCSV() {
+  document.getElementById('submitDiv').style.display = 'none';
+  document.getElementById('exportDiv').style.display = 'block';
+  document.getElementById('answers').style.display = 'table';
+}
+
+function exportToCSV() {
   const table = document.getElementById('answers');
   const rows = table.querySelectorAll('tbody tr');
   let csv = 'Question,Answer\n';
 
-  for (let i = 1; i < rows.length; i++) {
-    const question = rows[i].cells[0].textContent;
-    const answer = rows[i].cells[1].textContent;
+  rows.forEach(row => {
+    const question = row.cells[0].textContent;
+    const answer = row.cells[1].textContent;
     csv += `"${question}","${answer}"\n`;
-  }
+  });
 
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = window.URL.createObjectURL(blob);
@@ -285,10 +247,11 @@ const cioQuestions = [
   window.URL.revokeObjectURL(url);
 }
 
+function showSubmit() {
+  document.getElementById('submitDiv').style.display = 'block';
+}
 
-    function showSubmit() {
-      document.getElementById('submitDiv').style.display = 'block';
-    }
-  </script>
-</body>
-</html>
+function changeExportButtonLabel(category) {
+  const exportButton = document.getElementById('exportButton');
+  exportButton.textContent = `Export to CSV (${category})`;
+}

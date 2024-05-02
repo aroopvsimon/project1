@@ -1,0 +1,71 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+h1 {
+  text-align: center;
+  color: #2d64a5; /* VMware blue */
+}
+
+#questions {
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+label, input[type="text"] {
+  display: inline-block; /* Display labels and input fields inline */
+  vertical-align: top; /* Align them vertically */
+}
+
+label {
+  width: 50%; /* Set width for labels */
+}
+
+input[type="text"] {
+  width: 30%; /* Set width for input fields */
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+
+.button-container {
+  text-align: right;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #2d64a5; /* VMware blue */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #1d4e7e; /* Darker shade of VMware blue */
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #2d64a5; /* VMware blue */
+  color: #ffffff;
+}

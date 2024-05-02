@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Landscape Assessment Questionnaire</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Add custom CSS for softer fonts */
+    #questions label {
+      font-family: Arial, sans-serif; /* Change font family */
+      font-size: 16px; /* Change font size */
+      color: #444; /* Change font color */
+    }
+  </style>
 </head>
 <body>
   <h1 style="font-weight: bold; font-size: 48px; color: #007db8;">Landscape Assessment Questionnaire</h1>
@@ -12,9 +20,9 @@
   <div id="submitDiv" style="display: none;">
     <button onclick="submitAnswers()">Submit</button>
   </div>
-  <div id="exportDiv" style="display: none;">
-    <button onclick="exportToCSV()">Export to CSV</button>
-  </div>
+<div id="exportDiv" style="display: none;">
+  <button id="exportButton" onclick="exportToCSV()">Export to CSV</button>
+</div>
   <table id="answers" style="display: none;">
     <thead>
       <tr>
@@ -25,7 +33,7 @@
     <tbody></tbody>
   </table>
   <script>
-    const questions = [
+    const itQuestions = [
   "IT: ORGANIZATION NAME",
   "IT: CURRENT DC LOCATIONS",
   "IT: CURRENT DR LOCATION",
@@ -38,8 +46,6 @@
   "IT: LIST RECURRING MANUAL PROCESSES OR PROBLEM STATEMENTS FACED BY VMWARE ADMIN TODAY - SUCH AS OFF-HOURS MONITORING/RECURRING DATASTORE EXTENSION, MANUAL PAPER WORK etc",
   "IT: LIST THE MONITORING TOOLS USED TODAY FOR EACH SERVER UTILIZATION, STORAGE UTILIZATION, NETWORK MONITORING, APPLICATION MONITORING, DATABASE MONITORING, SAP ETC",
   "IT: RPO REQUIREMENTS",
-  "ST: RANSOMWARE PROTECTION REQUIRED",
-  "NT: CURRENT SITE TO SITE CONNECTIVITY?",
   "IT: LOVA/RVTOOLS REPORTS AVAILABLE?",
   "IT: SERVER/STORAGE HARDWARE REFRESH REQUIRED IN NEXT 12 MONTHS?",
   "IT: VMWARE LICENSE CONSOLIDATION NEEDED?",
@@ -52,29 +58,10 @@
   "IT: APPLICATION ARCHITECTURE DIAGRAMS AVAILABLE?",
   "IT: ANY APPLICATIONS USING TOMCAT / IIS?",
   "IT: ANY APPLICATIONS/DEVELOPER TEAM USING SPRING JAVA FRAMEWORK?",
-  "AT: IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
   "IT: LIST DATABASES BEING MANAGED? SUCH AS MYSQL/ORACLE/MSSQL/POSTGRES",
   "IT: DO YOU WISH TO PROVIDE SELF SERVICE ACCESS TO YOUR END USERS?",
   "IT: DO YOU DEVELOP CUSTOMER SOLUTIONS?",
-  "AT: DO YOU HAVE HIGH PERFORMANCE REAL TIME APPLICATIONS?",
-  "AT: IS TRANSACTION INTEGRITY DESIRED FOR YOUR DISTRIBUTED APPLICATIONS?",
-  "AT: ARE IN HOUSE APPLICATION COMPONENTS DEVELOPED IN MULTIPLE LANGUAGES? IS CROSS LANGUAGE MESSAGING REQUIRED?",
-  "AT: DO YOU HAVE AUTOMATED DATABASE LCM, BACKUPS, HA & MONITORING?",
-  "AT: DO YOU REQUIRE/DEVELOP ANALYTICAL MODELS FOR COMPLEX APPLICATIONS",
-  "AT: DO YOU NEED DEVELOPER SELF SERVICE ACCESS TO PLATFORM",
-  "AT: DO YOU NEED CURATED OPEN SOURCE IMAGES?",
-  "AT: DO YOU DEPLOY KUBERNETES CLUSTERS ACROSS SITES/CLOUDS?",
-  "AT: IS AUTOMATION OF KUBERNETES DEPLOYMENT & CONSUMPTION REQUIRED?",
-  "NT: DO YOU WANT TO REDUCE NETWORK/IP ADDRESS PROVISIONING TIME?",
-  "NT: LIST CURRENT IDS/IPS TECHNOLOGY IN-USE?",
-  "NT: LIST ANY LOAD BALANCERS IN USE",
-  "NT: LIST CURRENT PERIMETER FIREWALL(S)",
-  "ST: ANY ZTNA INITIATIVES/REQUIREMENTS?",
-  "ST: ANY SASE INITIATIVES",
-  "ST: KUBERNETES CLUSTER SECURITY / MICROSERVICES SECURITY",
-  "NT: ANY NETWORK DETECTION & RESPONSE (NDR) REQUIREMENTS",
-  "NT: ANY NETOWRK TRAFFIC ANALYSIS REQUIREMENTS",
-  "IT: SAT1 : SIMPLE AUTOMATION TASK (SAT1) : ASSIGN AN IP ADDRESS FROM AN IP ADDRESS MANAGEMENT TOOL",
+  "IT: SIMPLE AUTOMATION TASK (SAT) SAT1 : ASSIGN AN IP ADDRESS FROM AN IP ADDRESS MANAGEMENT TOOL",
   "IT: SAT2 : INTEGRATE ERP WITH ITSM AND ACTIVE DIRECTORY",
   "IT: SAT3 : UPDATE A CONFIGURATION MANAGEMENT DATABASE",
   "IT: SAT4 : INITIATE A SYSTEM BACKUP",
@@ -86,7 +73,7 @@
   "IT: SAT10 : VM TEMPLATES TO BE DEFINED ONCE AND DEPLOYED AGNOSTIC TO ANY CLOUD (AWS/AZURE/ONPREMISE)",
   "IT: SAT11 : DISK EXTENSION AUTOMATION",
   "IT: SAT12 : SELF-SERVICE MULTI-CLOUD",
-  "IT: SMT1 : SIMPLE MONITORING TASK (SMT1) : APACHE HADOOP MONITORING",
+  "IT: SIMPLE MONITORING TASK (SMT)1 : APACHE HADOOP MONITORING",
   "IT: SMT2 : APACHE TOMCAT MONITORING",
   "IT: SMT3 : ARISTA EOS MONITORING",
   "IT: SMT4 : CISCO NETWORKING DEVICES MONITORING",
@@ -111,7 +98,17 @@
   "IT: SMT23 : STORAGE DEVICES MONITORING",
   "IT: SMT24 : VSPHERE REPLICATION MONITORING",
   "IT: SMT25 : OS AND APPLICATION MONITORING MONITORING",
-  "NT1 : (NETWORK TASK 1) : MONITOR/ANALYZE NETWORK PROBLEMS USING END-TO-END NETWORK BEHAVIOR",
+];
+
+const ntQuestions = [
+  "NT: CURRENT SITE TO SITE CONNECTIVITY?",
+  "NT: DO YOU WANT TO REDUCE NETWORK/IP ADDRESS PROVISIONING TIME?",
+  "NT: LIST CURRENT IDS/IPS TECHNOLOGY IN-USE?",
+  "NT: LIST ANY LOAD BALANCERS IN USE",
+  "NT: LIST CURRENT PERIMETER FIREWALL(S)",
+  "NT: ANY NETWORK DETECTION & RESPONSE (NDR) REQUIREMENTS",
+  "NT: ANY NETOWRK TRAFFIC ANALYSIS REQUIREMENTS",
+  "NT1 : NETWORK TASK (NT)1 : MONITOR/ANALYZE NETWORK PROBLEMS USING END-TO-END NETWORK BEHAVIOR",
   "NT2 : PERFORM ROOT-CAUSE ANALYSIS",
   "NT3 : PERFORM HEALTH ANALYSIS OF PHYSICAL AND VIRTUAL NETWORK DEVICES",
   "NT4 : BE CONTINUOUSLY AWARE OF THE TOP TALKING APPLICATIONS/VMS AND THEIR NETWORKING CONSTRUCTS",
@@ -153,6 +150,34 @@
   "NT40 : LOG CHECKING MONITORING",
   "NT41 : UNDERSTANDING % N/S, E/W, AVERAGE, PEAK DATACENTER TRAFFIC",
   "NT42 : RISK ANALYSIS/ NEW TECHNOLOGY ADOPTION",
+  // Add more NT questions as needed
+];
+
+const atQuestions = [
+  "AT: IS WAF (WEB APPLICATION FIREWALLS) OR LOAD BALANCERS REQUIRED FOR YOUR APPLICATIONS?",
+  "AT: DO YOU HAVE HIGH PERFORMANCE REAL TIME APPLICATIONS?",
+  "AT: IS TRANSACTION INTEGRITY DESIRED FOR YOUR DISTRIBUTED APPLICATIONS?",
+  "AT: ARE IN HOUSE APPLICATION COMPONENTS DEVELOPED IN MULTIPLE LANGUAGES? IS CROSS LANGUAGE MESSAGING REQUIRED?",
+  "AT: DO YOU HAVE AUTOMATED DATABASE LCM, BACKUPS, HA & MONITORING?",
+  "AT: DO YOU REQUIRE/DEVELOP ANALYTICAL MODELS FOR COMPLEX APPLICATIONS",
+  "AT: DO YOU NEED DEVELOPER SELF SERVICE ACCESS TO PLATFORM",
+  "AT: DO YOU NEED CURATED OPEN SOURCE IMAGES?",
+  "AT: DO YOU DEPLOY KUBERNETES CLUSTERS ACROSS SITES/CLOUDS?",
+  "AT: IS AUTOMATION OF KUBERNETES DEPLOYMENT & CONSUMPTION REQUIRED?",
+
+  // Add AT questions as needed
+];
+
+const stQuestions = [
+  "ST: RANSOMWARE PROTECTION REQUIRED",
+  "ST: ANY ZTNA INITIATIVES/REQUIREMENTS?",
+  "ST: ANY SASE INITIATIVES",
+  "ST: KUBERNETES CLUSTER SECURITY / MICROSERVICES SECURITY",
+  
+// Add ST questions as needed
+];
+
+const cioQuestions = [
   "CIO: DO YOU REQUIRE CLOUD SPEND OPTIMIZATION & SECURITY",
   "CIO: DO YOU WANT TO AUTOMATE MANUAL OPERATIONAL TASKS WITH AUTOMATION",
   "CIO: DO YOU WANT TO INCREASE SHAREHOLDER VALUE",
@@ -165,8 +190,12 @@
   "CIO: DO YOU WANT TO VIRTUALIZE QUICKLY",
   "CIO: DO YOU WANT TO LEVERAGE EFFICIENCIES",
   "CIO: DO YOU WANT TO AVOID VENDOR LOCK-IN ACROSS CLOUDS",
-    ];
+ 
+ // Add CIO questions as needed
+];
 
+
+    let categoryQuestions = [];
     document.addEventListener('DOMContentLoaded', function() {
       const questionsDiv = document.getElementById('questions');
       const params = new URLSearchParams(window.location.search);
@@ -181,6 +210,9 @@
       categoryQuestions.forEach((question, index) => {
         const label = document.createElement('label');
         label.textContent = `${index + 1}. ${question}`;
+        label.style.fontFamily = 'Arial, sans-serif'; // Apply custom font family
+        label.style.fontSize = '16px'; // Apply custom font size
+        label.style.color = '#444'; // Apply custom font color
         const input = document.createElement('input');
         input.setAttribute('type', 'text');
         input.addEventListener('input', checkAllAnswers);
@@ -233,25 +265,26 @@
       document.getElementById('answers').style.display = 'table';
     }
 
-    function exportToCSV() {
-      const table = document.getElementById('answers');
-      const rows = table.querySelectorAll('tbody tr');
-      let csv = 'Question,Answer\n';
+  function exportToCSV() {
+  const table = document.getElementById('answers');
+  const rows = table.querySelectorAll('tbody tr');
+  let csv = 'Question,Answer\n';
 
-      rows.forEach(row => {
-        const question = row.cells[0].textContent;
-        const answer = row.cells[1].textContent;
-        csv += `"${question}","${answer}"\n`;
-      });
+  for (let i = 1; i < rows.length; i++) {
+    const question = rows[i].cells[0].textContent;
+    const answer = rows[i].cells[1].textContent;
+    csv += `"${question}","${answer}"\n`;
+  }
 
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
-      a.setAttribute('download', 'questionnaire.csv');
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', 'questionnaire.csv');
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
 
     function showSubmit() {
       document.getElementById('submitDiv').style.display = 'block';
